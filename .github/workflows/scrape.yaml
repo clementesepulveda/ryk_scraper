@@ -1,0 +1,38 @@
+
+on:
+  schedule:
+  - cron: "0 * * * *"
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  RykScraper:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: "3.11"
+
+      - name: Install Python dependencies
+        run: |
+            pip install -r requirements.txt
+      - name: Run scraper
+        run: python ryk_scraper.py
+        
+      - name: Commit data files
+        run: |
+          pwd
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git status
+          git add -A
+          git commit -a -m "RyK glasses data" || echo "Nothing to commit"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+          force: true
