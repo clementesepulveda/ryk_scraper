@@ -1,214 +1,151 @@
-let glassesOption = "Polaroid PLD D485"
+let glassesOption = "Polaroid PLD D485";
+let DATA = [];
 
-function loadDataFromCSV(url, callback) {
-    fetch(url)
-        .then(response => response.text())
-        .then(data => callback(data))
-        .catch(error => console.error('Error fetching CSV data:', error));
+async function getFileData(fileName) {
+    const file = await fetch(fileName);
+    const data = await (await file.text()).split('\n').map(v => {
+        const item = v.trim().split(',')
+        return {
+            id: item[0],
+            name: item[1],
+            price: item[2],
+            discount: item[3],
+        }
+    })
+
+    return data;
 }
 
-function fetchFileList() {
+async function fetchFileList() {
     const apiUrl = 'https://api.github.com/repos/clementesepulveda/ryk_scraper/contents/data';
 
-    return fetch(apiUrl)
+    const names = await fetch(apiUrl)
         .then(response => response.json())
         .then(files => files.map(file => file.name))
         .catch(error => console.error('Error fetching file list:', error));
-}
 
-async function fetchAndProcessFiles(fileList) {
-    let data = [];
-
-    // Use Promise.all to wait for all fetch promises to resolve
-    await Promise.all(fileList.map(async (file) => {
-        const fileUrl = `https://raw.githubusercontent.com/clementesepulveda/ryk_scraper/main/data/${file}`;
-
-        try {
-            const response = await fetch(fileUrl);
-            const csvData = await response.text();
-            const dataArray = await processData(csvData);
-
-            const glassesData = dataArray.filter((v) => v.name === glassesOption);
-
-            glassesData.forEach((g) => {
-                g['date'] = file
-                data.push(g);
-            });
-        } catch (error) {
-            console.error(`Error reading CSV file ${file}:`, error);
-        }
-    }));
-
-    console.log(data.sort(v => v.date))
-    return data
-}
-
-function processData(csvData) {
-    let lines = csvData.split('\n');
-    let dataArray = [];
-    for (let i = 1; i < lines.length - 1; i++) { // Start from 1 to skip header
-        let cols = lines[i].split(',');
-        dataArray.push({
-            id: parseInt(cols[0]),
-            name: cols[1],
-            price: parseFloat(cols[2].replace('$', '').replace('.', '')),
-            discount: cols[3].includes('%') ? parseInt(cols[3].slice(0, 2)) : 0,
+    for (let i = 0; i < names.length; i++) {
+        let timedData = await getFileData(`./data/${names[i]}`)
+        timedData.forEach(element => {
+            element['date'] = names[i].replace('.csv', '')
         });
+        DATA.push(...timedData)
     }
 
-    const orderedDataArray = dataArray.sort((a, b) => a.price - b.price)
-    return orderedDataArray;
+    // Process
+    DATA = DATA.filter(v => v.id !== "")
+    DATA = DATA.map(v => {
+        v['discount'] = v['discount'].includes('%') ? parseInt(v['discount'].split('%')[0]) : 0
+        v['price'] = parseInt(v['price'].replace('.', ''))
+        return v
+    })
 }
 
-// SELECT GLASSES
-function addOptions(csvData) {
-    var dataArray = processData(csvData);
-    const names = dataArray.map(v => v.name).sort()
+// // SELECT GLASSES
+function addOptions() {
+    const names = [... new Set(DATA.map(v => v.name).sort())]
 
     let dom = document.getElementById('glasses-selector');
     names.forEach(name => {
         var option = document.createElement("option");
         option.text = name;
-        if (name === glassesOption){
+        if (name === glassesOption) {
             option.selected = true;
         }
         dom.add(option);
     });
 }
-loadDataFromCSV('data/26_01_24 10.10.csv', addOptions); // a bit hardcoded but will fix later
+
+let graphs;
+function createGraphs() {
+    graphs = {
+        'Discounts': echarts.init(
+            document.getElementById('discounts-container'), null, {
+            renderer: 'canvas',
+            useDirtyRect: false
+        }),
+        'Prices': echarts.init(
+            document.getElementById('prices-container'), null, {
+            renderer: 'canvas',
+            useDirtyRect: false
+        }),
+    }
+
+    window.addEventListener('resize', graphs['Discounts'].resize);
+    window.addEventListener('resize', graphs['Prices'].resize);
+
+    updateGraph('Discounts');
+    updateGraph('Prices');
+}
 
 
-// SHOW DISCOUNT GRAPH GRAPH
-var domDiscounts = document.getElementById('discounts-container');
-var chartDiscounts = echarts.init(domDiscounts, null, {
-    renderer: 'canvas',
-    useDirtyRect: false
-});
+function updateGraph(graphName) {
+    const graphData = DATA.filter(v => v.name === glassesOption)
 
-window.addEventListener('resize', chartDiscounts.resize);
-
-function updateDiscountsChart(dataArray) {
     const option = {
         title: {
-            text: `Discounts for ${glassesOption}`,
-            x:'center'
+            text: `${graphName}`,
+            subtext: `${glassesOption}`,
+            x: 'center',
+            textStyle: {
+                width: 200,
+            }
         },
         xAxis: {
             type: 'category',
-            name: 'date',
+            name: 'Date',
             nameLocation: 'middle',
-            nameGap: 35,
-            data: dataArray.map(item => item.date)
+            nameGap: 30,
+            data: graphData.map(item => item.date)
         },
         yAxis: {
             type: 'value',
-            name: 'Discount',
-            nameGap: 35,
+            name: graphName.slice(0, graphName.length-1),
+            nameGap: 40,
             nameLocation: 'middle',
         },
         series: [
             {
-                data: dataArray.map(item => item.discount),
+                data: graphData.map(item => item[graphName.toLowerCase().slice(0, graphName.length-1)]),
                 type: 'line'
             }
         ],
         tooltip: {
             trigger: 'axis',
+        },
+        grid: {
+            left: 50, // Adjust the left margin
+            right: 50, // Adjust the right margin
+            bottom: 80,
+            containLabel: true
         },
         dataZoom: [
-          {
-            type: 'slider'
-          },
-          {
-            type: 'inside'
-          }
-        ],
-    };
-
-    if (option && typeof option === 'object') {
-        chartDiscounts.setOption(option);
-    }
-}
-
-// SHOW PRICES GRAPH GRAPH
-var domPrices = document.getElementById('prices-container');
-var chartPrices = echarts.init(domPrices, null, {
-    renderer: 'canvas',
-    useDirtyRect: false
-});
-
-window.addEventListener('resize', chartPrices.resize);
-
-function updatePriceChart(dataArray) {
-    const option = {
-        title: {
-            text: `Prices for ${glassesOption}`,
-            x:'center'
-        },
-        xAxis: {
-            type: 'category',
-            name: 'date',
-            nameLocation: 'middle',
-            nameGap: 35,
-            data: dataArray.map(item => item.date)
-        },
-        yAxis: {
-            type: 'value',
-            name: 'Price',
-            nameGap: 35,
-            nameLocation: 'middle',
-        },
-        series: [
             {
-                data: dataArray.map(item => item.price),
-                type: 'line'
+                type: 'slider'
+            },
+            {
+                type: 'inside'
             }
         ],
-        tooltip: {
-            trigger: 'axis',
-        },
     };
 
     if (option && typeof option === 'object') {
-        chartPrices.setOption(option);
+        graphs[graphName].setOption(option);
     }
 }
 
 
-// get data for discounts
-fetchFileList()
-    .then(async fileList => {
-        const data = await fetchAndProcessFiles(fileList);
-        updateDiscountsChart(data);
-    })
-    .catch(error => console.error('Error fetching files:', error));
-
-
 document.querySelector('#glasses-selector').addEventListener("change", function () {
     glassesOption = this.value
-    fetchFileList()
-        .then(async fileList => {
-            const data = await fetchAndProcessFiles(fileList);
-            updateDiscountsChart(data);
-        })
-        .catch(error => console.error('Error fetching files:', error));
+    updateGraph('Prices')
+    updateGraph('Discounts')
 });
 
-// get data for prices
-fetchFileList()
-    .then(async fileList => {
-        const data = await fetchAndProcessFiles(fileList);
-        updatePriceChart(data);
-    })
-    .catch(error => console.error('Error fetching files:', error));
 
+async function init() {
+    await fetchFileList()
+    await addOptions()
+    await createGraphs()
+}
 
-document.querySelector('#glasses-selector').addEventListener("change", function () {
-    glassesOption = this.value
-    fetchFileList()
-        .then(async fileList => {
-            const data = await fetchAndProcessFiles(fileList);
-            updatePriceChart(data);
-        })
-        .catch(error => console.error('Error fetching files:', error));
-});
+init()
