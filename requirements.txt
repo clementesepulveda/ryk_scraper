@@ -1,4 +1,4 @@
-bs4
-urllib
+beautifulsoup4
+urlopen
 pandas
 datetime
