@@ -11,9 +11,15 @@ soup = BeautifulSoup(html, "html.parser")
 
 data = []
 for product in soup.find_all('div',{'class': 'product'}):
+    if product == None:
+        continue
+
     price = product.find('span', {'class': 'value'}).text.replace('\n', '').strip().replace('  ', '').replace('$', '')
     name = product.find('div', {'class': 'tile-body'}).find('a').text
-    discount = product.find('span', {'class': 'promo-value'}).text.strip()
+    
+
+    discount = product.find('span', {'class': 'promo-value'})
+    discount = discount.text.strip() if discount else '0'
 
     data.append({
         'name' : name, 
