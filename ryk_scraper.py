@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import pandas as pd
+import pytz
 from datetime import datetime
 
 url = "https://www.ryk.cl/anteojos-opticos?prefn1=ryk_gender&prefv1=Hombre&sz=512&start=0"
@@ -16,7 +17,6 @@ for product in soup.find_all('div',{'class': 'product'}):
 
     price = product.find('span', {'class': 'value'}).text.replace('\n', '').strip().replace('  ', '').replace('$', '')
     name = product.find('div', {'class': 'tile-body'}).find('a').text
-    
 
     discount = product.find('span', {'class': 'promo-value'})
     discount = discount.text.strip() if discount else '0'
@@ -29,6 +29,7 @@ for product in soup.find_all('div',{'class': 'product'}):
 
 df = pd.DataFrame.from_dict(data)
 
-now = datetime.now()
+timezone = pytz.timezone('Chile/Continental')
+now = datetime.datetime.now(tz = timezone)
 current_time = now.strftime("%d_%m_%y %H.%M")
 df.to_csv(f'data/{current_time}.csv')
