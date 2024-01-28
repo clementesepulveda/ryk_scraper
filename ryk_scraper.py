@@ -30,6 +30,6 @@ for product in soup.find_all('div',{'class': 'product'}):
 df = pd.DataFrame.from_dict(data)
 
 timezone = pytz.timezone('Chile/Continental')
-now = datetime.datetime.now(tz = timezone)
+now = datetime.now(tz = timezone)
 current_time = now.strftime("%d_%m_%y %H.%M")
 df.to_csv(f'data/{current_time}.csv')
