@@ -49,7 +49,7 @@ DbyD DBOM5016,0.0,Marcos Gratis
 DbyD DBOM5043,0.0,Marcos Gratis
 DbyD DBOM5044,0.0,Marcos Gratis
 DbyD DBOM5045,0.0,Marcos Gratis
-DbyD DBOM5047,[ 0.  43.9],['0' 'Marcos Gratis']
+DbyD DBOM5047,[ 0.  43.9],Marcos Gratis
 DbyD DBOU0004,0.0,Marcos Gratis
 Dolce and Gabbana 0DG3372,230.9,35% marcos + cristales
 Emporio 0EA1041,140.9,35% marcos + cristales
@@ -175,9 +175,9 @@ Kalani KA1043,76.9,35% marcos + cristales
 Kalani KA1044,76.9,35% marcos + cristales
 Kalani KA1045,76.9,35% marcos + cristales
 Kalani KA1056,65.9,35% marcos + cristales
-Kalani KA1057,65.9,['0' '35% marcos + cristales']
+Kalani KA1057,65.9,35% marcos + cristales
 Kalani KA1058,65.9,35% marcos + cristales
-Kalani KA1059,65.9,['0' '35% marcos + cristales']
+Kalani KA1059,65.9,35% marcos + cristales
 Kalani KA1060,65.9,35% marcos + cristales
 Karun Cochamo Black,94.9,35% marcos + cristales
 Karun KAOF0083,84.9,35% marcos + cristales
@@ -194,6 +194,7 @@ Lucca LU1002,32.9,35% marcos + cristales
 Lucca LU1003,32.9,35% marcos + cristales
 Lucca LU1004,32.9,35% marcos + cristales
 Lucca LU1005,32.9,0
+Lucca LU1006,32.9,35% marcos + cristales
 Lucca LU1007,32.9,35% marcos + cristales
 Lucca LU1008,32.9,35% marcos + cristales
 Lucca LU1011,32.9,35% marcos + cristales
@@ -333,7 +334,7 @@ Unofficial UNOM0068,54.9,35% marcos + cristales
 Unofficial UNOM0073,0.0,Marcos Gratis
 Unofficial UNOM0088,0.0,Marcos Gratis
 Unofficial UNOM0129,0.0,Marcos Gratis
-Unofficial UNOM0157,[ 0.  54.9],['0' 'Marcos Gratis']
+Unofficial UNOM0157,[ 0.  54.9],Marcos Gratis
 Unofficial UNOM0188,0.0,Marcos Gratis
 Unofficial UNOM0194,0.0,Marcos Gratis
 Unofficial UNOM0236,0.0,Marcos Gratis
