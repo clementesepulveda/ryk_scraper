@@ -31,5 +31,5 @@ df = pd.DataFrame.from_dict(data)
 
 timezone = pytz.timezone('Chile/Continental')
 now = datetime.now(tz = timezone)
-current_time = now.strftime("%d_%m_%y %H.%M")
+current_time = now.strftime("%y_%m_%d %H.%M")
 df.to_csv(f'data/{current_time}.csv')

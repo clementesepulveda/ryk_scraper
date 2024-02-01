@@ -5,7 +5,7 @@ import pandas as pd
 
 timezone = pytz.timezone('Chile/Continental')
 now = datetime.datetime.now(tz = timezone)
-current_date = now.strftime("%d_%m_%y")
+current_date = now.strftime("%y_%m_%d")
 
 # print(now)
 df = pd.DataFrame()

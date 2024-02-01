@@ -107,7 +107,7 @@ function updateGraph(graphName) {
         series: [
             {
                 data: graphData.map(item => item[graphName.toLowerCase().slice(0, graphName.length-1)]),
-                type: 'line'
+                type: 'line',
             }
         ],
         tooltip: {
