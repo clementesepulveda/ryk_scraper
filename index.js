@@ -27,7 +27,12 @@ async function fetchFileList() {
     for (let i = 0; i < names.length; i++) {
         let timedData = await getFileData(`./data/${names[i]}`)
         timedData.forEach(element => {
-            element['date'] = names[i].replace('.csv', '')
+            const csvNameToDate = d => {
+                let l = d.replace(' ', '_').replace('.','_').split('_')
+                return new Date('20'+l[0],l[1]-1,l[2],l[3],l[4]).toISOString()
+            }
+            
+            element['date'] = csvNameToDate(names[i].replace('.csv', '')) 
         });
         DATA.push(...timedData)
     }
@@ -81,6 +86,16 @@ function createGraphs() {
 
 function updateGraph(graphName) {
     const graphData = DATA.filter(v => v.name === glassesOption)
+    console.log(graphData)
+    console.log(graphData.map(item => {
+        return {
+            name: item.date,
+            value: [
+                item.date,
+                item[graphName.toLowerCase().slice(0, graphName.length-1)]
+            ]
+        }
+    }))
 
     const option = {
         title: {
@@ -92,21 +107,29 @@ function updateGraph(graphName) {
             }
         },
         xAxis: {
-            type: 'category',
+            type: 'time',
             name: 'Date',
             nameLocation: 'middle',
             nameGap: 30,
-            data: graphData.map(item => item.date)
+            // data: graphData.map(item => [item.date, item[graphName.toLowerCase().slice(0, graphName.length-1)]   ])
         },
         yAxis: {
             type: 'value',
-            name: graphName.slice(0, graphName.length-1),
-            nameGap: 40,
-            nameLocation: 'middle',
+        //     name: graphName.slice(0, graphName.length-1),
+        //     nameGap: 40,
+        //     nameLocation: 'middle',
         },
         series: [
             {
-                data: graphData.map(item => item[graphName.toLowerCase().slice(0, graphName.length-1)]),
+                data: graphData.map(item => {
+                    return {
+                        name: item.date,
+                        value: [
+                            item.date,
+                            item[graphName.toLowerCase().slice(0, graphName.length-1)]
+                        ]
+                    }
+                }),
                 type: 'line',
             }
         ],
