@@ -15,5 +15,6 @@ for dir in os.listdir('data'):
     
     df = pd.concat([df, pd.read_csv(f'data/{dir}')])
 
-data = df.groupby('name').agg(pd.Series.mode)[['price', 'discount']]
+data = df.groupby('name')[['price', 'discount']].agg(lambda x: pd.Series.mode(x).iat[0])
+
 data.to_csv(f'daily/{current_date}.csv')
