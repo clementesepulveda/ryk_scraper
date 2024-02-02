@@ -86,16 +86,6 @@ function createGraphs() {
 
 function updateGraph(graphName) {
     const graphData = DATA.filter(v => v.name === glassesOption)
-    console.log(graphData)
-    console.log(graphData.map(item => {
-        return {
-            name: item.date,
-            value: [
-                item.date,
-                item[graphName.toLowerCase().slice(0, graphName.length-1)]
-            ]
-        }
-    }))
 
     const option = {
         title: {
@@ -115,9 +105,9 @@ function updateGraph(graphName) {
         },
         yAxis: {
             type: 'value',
-        //     name: graphName.slice(0, graphName.length-1),
-        //     nameGap: 40,
-        //     nameLocation: 'middle',
+            name: graphName.slice(0, graphName.length-1),
+            nameGap: 25,
+            nameLocation: 'middle',
         },
         series: [
             {
@@ -137,8 +127,8 @@ function updateGraph(graphName) {
             trigger: 'axis',
         },
         grid: {
-            left: 50, // Adjust the left margin
-            right: 50, // Adjust the right margin
+            left: 15,
+            right: 0,
             bottom: 80,
             containLabel: true
         },
