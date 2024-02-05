@@ -77,7 +77,7 @@ function createGraphs() {
 
 
 function updateGraph(graphName) {
-    const graphData = DATA.filter(v => v.name === glassesOption)
+    const graphData = DATA.filter(v => v.name.replaceAll(' ', '') === glassesOption.replaceAll(' ', ''))
 
     const option = {
         title: {
