@@ -32,7 +32,7 @@ df = pd.DataFrame.from_dict(data)
 
 timezone = pytz.timezone('Chile/Continental')
 now = datetime.now(tz = timezone)
-current_time = now.strftime("%y_%m_%d %H.%M")
+current_time = now.strftime("%Y-%m-%d %H:%M:00")
 
 df['date'] = current_time
 
