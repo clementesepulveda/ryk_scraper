@@ -151,7 +151,12 @@ const removeLoading = async () => {
     loaders.forEach(loader => {
         loader.remove();
     });
-    console.log('HE')
+    
+    const graphContainers = document.querySelectorAll('.graph-container');
+    graphContainers.forEach(graphContainer => {
+        graphContainer.style.width = '100%';
+        graphContainer.style.height = '100%';
+    });
 }
 
 async function init() {
