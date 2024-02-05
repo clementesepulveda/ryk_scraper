@@ -6,10 +6,10 @@ async function getFileData(fileName) {
     const data = await (await file.text()).split('\n').map(v => {
         const item = v.trim().split(',')
         return {
-            name: item[2],
-            price: item[3],
-            discount: item[4],
-            date: item[5]
+            name: item[0],
+            price: item[1],
+            discount: item[2],
+            date: item[3]
         }
     })
 
@@ -26,11 +26,11 @@ async function fetchFileList() {
 
     for (let i = 0; i < names.length; i++) {
         let timedData = await getFileData(`./data/${names[i]}`)
+        timedData = timedData.slice(1, timedData.length - 1) // remove headers and last empty line
         DATA.push(...timedData)
     }
 
     // Process
-    DATA = DATA.filter(v => v.name !== "" && v.name !== undefined)
     DATA = DATA.map(v => {
         v['discount'] = v['discount'].includes('%') ? parseInt(v['discount'].split('%')[0]) : 0
         v['price'] = parseInt(v['price'].replace('.', ''))
