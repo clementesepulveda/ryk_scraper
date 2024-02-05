@@ -35,6 +35,7 @@ now = datetime.now(tz = timezone)
 current_time = now.strftime("%Y-%m-%d %H:%M:00")
 
 df['date'] = current_time
+df['price'] = df['price'].apply(lambda x: int(str(x).replace('.', '')))
 
 file_name = 'data/' + now.strftime("%Y_%m") + '.csv'
 if not os.path.isfile(file_name):
