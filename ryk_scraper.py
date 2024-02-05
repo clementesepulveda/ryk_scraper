@@ -3,6 +3,7 @@ from urllib.request import urlopen
 import pandas as pd
 import pytz
 from datetime import datetime
+import os
 
 url = "https://www.ryk.cl/anteojos-opticos?prefn1=ryk_gender&prefv1=Hombre&sz=512&start=0"
 page = urlopen(url)
@@ -32,4 +33,11 @@ df = pd.DataFrame.from_dict(data)
 timezone = pytz.timezone('Chile/Continental')
 now = datetime.now(tz = timezone)
 current_time = now.strftime("%y_%m_%d %H.%M")
-df.to_csv(f'data/{current_time}.csv')
+
+df['date'] = current_time
+
+file_name = 'data/' + now.strftime("%Y_%m") + '.csv'
+if not os.path.isfile(file_name):
+    df.to_csv(file_name, index=False)
+else:  # else it exists so append without writing the header
+    df.to_csv(file_name, mode='a', header=False, index=False)

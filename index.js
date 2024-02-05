@@ -6,10 +6,10 @@ async function getFileData(fileName) {
     const data = await (await file.text()).split('\n').map(v => {
         const item = v.trim().split(',')
         return {
-            id: item[0],
-            name: item[1],
-            price: item[2],
-            discount: item[3],
+            name: item[2],
+            price: item[3],
+            discount: item[4],
+            date: item[5]
         }
     })
 
@@ -26,19 +26,11 @@ async function fetchFileList() {
 
     for (let i = 0; i < names.length; i++) {
         let timedData = await getFileData(`./data/${names[i]}`)
-        timedData.forEach(element => {
-            const csvNameToDate = d => {
-                let l = d.replace(' ', '_').replace('.','_').split('_')
-                return new Date('20'+l[0],l[1]-1,l[2],l[3],l[4]).toISOString()
-            }
-            
-            element['date'] = csvNameToDate(names[i].replace('.csv', '')) 
-        });
         DATA.push(...timedData)
     }
 
     // Process
-    DATA = DATA.filter(v => v.id !== "")
+    DATA = DATA.filter(v => v.name !== "" && v.name !== undefined)
     DATA = DATA.map(v => {
         v['discount'] = v['discount'].includes('%') ? parseInt(v['discount'].split('%')[0]) : 0
         v['price'] = parseInt(v['price'].replace('.', ''))
@@ -128,7 +120,7 @@ function updateGraph(graphName) {
         },
         grid: {
             left: 15,
-            right: 0,
+            right: 5,
             bottom: 80,
             containLabel: true
         },
