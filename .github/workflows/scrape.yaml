@@ -1,4 +1,4 @@
-
+name: "Rotter y Krauss Scraper"
 on:
   schedule:
   - cron: "0 * * * *"
@@ -21,8 +21,6 @@ jobs:
             pip install -r requirements.txt
       - name: Run scraper
         run: python ryk_scraper.py
-      - name: Run daily file summary
-        run: python update_daily_price.py
       - name: Commit data files
         run: |
           pwd
