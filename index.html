@@ -7,6 +7,28 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>RyK Prices</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .loader {
+            border: 16px solid #f3f3f3;
+            /* Light grey */
+            border-top: 16px solid #3498db;
+            /* Blue */
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 
 <body class="h-full bg-slate-100 mb-10">
@@ -22,7 +44,8 @@
     </div>
 
     <div class="h-2/3 bg-white m-5 md:m-10 rounded-2xl shadow-lg p-3 md:p-5 min-h-96">
-        <div class="h-full w-full">
+        <div class="h-full w-full flex items-center justify-center ">
+            <div class="loader"></div>
             <div id="discounts-container" style="height: 100%"></div>
         </div>
     </div>

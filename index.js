@@ -97,7 +97,7 @@ function updateGraph(graphName) {
         },
         yAxis: {
             type: 'value',
-            name: graphName.slice(0, graphName.length-1),
+            name: graphName.slice(0, graphName.length - 1),
             nameGap: 25,
             nameLocation: 'middle',
         },
@@ -108,7 +108,7 @@ function updateGraph(graphName) {
                         name: item.date,
                         value: [
                             item.date,
-                            item[graphName.toLowerCase().slice(0, graphName.length-1)]
+                            item[graphName.toLowerCase().slice(0, graphName.length - 1)]
                         ]
                     }
                 }),
@@ -146,9 +146,17 @@ document.querySelector('#glasses-selector').addEventListener("change", function 
     updateGraph('Discounts')
 });
 
+const removeLoading = async () => {
+    const loaders = document.querySelectorAll('.loader');
+    loaders.forEach(loader => {
+        loader.remove();
+    });
+    console.log('HE')
+}
 
 async function init() {
     await fetchFileList()
+    await removeLoading()
     await addOptions()
     await createGraphs()
 }
