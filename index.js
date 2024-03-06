@@ -142,8 +142,11 @@ function updateGraph(graphName) {
 
 document.querySelector('#glasses-selector').addEventListener("change", function () {
     glassesOption = this.value
-    updateGraph('Prices')
-    updateGraph('Discounts')
+    if (newGlassesOption !== glassesOption) {
+        glassesOption = newGlassesOption;
+        updateGraph('Prices');
+        updateGraph('Discounts');
+    }
 });
 
 const removeLoading = async () => {
