@@ -1,5 +1,6 @@
 let glassesOption = "Polaroid PLD D485";
 let DATA = [];
+const CHUNK_SIZE = 1000;
 
 async function getFileData(fileName) {
     const file = await fetch(fileName);
@@ -27,7 +28,10 @@ async function fetchFileList() {
     for (let i = 0; i < names.length; i++) {
         let timedData = await getFileData(`./data/${names[i]}`)
         timedData = timedData.slice(1, timedData.length - 1) // remove headers and last empty line
-        DATA.push(...timedData)
+
+        for (let j = 0; j < timedData.length; j += CHUNK_SIZE) {
+            DATA.push(...timedData.slice(j, j + CHUNK_SIZE));
+        }
     }
 
     // Process
@@ -154,7 +158,7 @@ const removeLoading = async () => {
     loaders.forEach(loader => {
         loader.remove();
     });
-    
+
     const graphContainers = document.querySelectorAll('.graph-container');
     graphContainers.forEach(graphContainer => {
         graphContainer.style.width = '100%';
