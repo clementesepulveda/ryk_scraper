@@ -145,7 +145,7 @@ function updateGraph(graphName) {
 
 
 document.querySelector('#glasses-selector').addEventListener("change", function () {
-    glassesOption = this.value
+    const newGlassesOption = this.value
     if (newGlassesOption !== glassesOption) {
         glassesOption = newGlassesOption;
         updateGraph('Prices');
