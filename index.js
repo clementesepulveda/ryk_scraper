@@ -23,7 +23,10 @@ async function fetchFileList() {
     const names = await fetch(apiUrl)
         .then(response => response.json())
         .then(files => files.map(file => file.name))
-        .catch(error => console.error('Error fetching file list:', error));
+        .catch(error => {
+            console.error('Error fetching file list:', error)
+            removeLoading();
+        });
 
     for (let i = 0; i < names.length; i++) {
         let timedData = await getFileData(`./data/${names[i]}`)
@@ -78,7 +81,6 @@ function createGraphs() {
     updateGraph('Descuentos');
     updateGraph('Precios');
 }
-
 
 function updateGraph(graphName) {
     const graphData = DATA.filter(v => v.name.replaceAll(' ', '') === glassesOption.replaceAll(' ', ''))
@@ -163,7 +165,6 @@ function updateGraph(graphName) {
         graphs[graphName].setOption(option);
     }
 }
-
 
 document.querySelector('#glasses-selector').addEventListener("change", function () {
     const newGlassesOption = this.value
