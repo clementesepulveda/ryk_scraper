@@ -60,23 +60,23 @@ function addOptions() {
 let graphs;
 function createGraphs() {
     graphs = {
-        'Discounts': echarts.init(
-            document.getElementById('discounts-container'), null, {
+        'Descuentos': echarts.init(
+            document.getElementById('descuentos-container'), null, {
             renderer: 'canvas',
             useDirtyRect: false
         }),
-        'Prices': echarts.init(
-            document.getElementById('prices-container'), null, {
+        'Precios': echarts.init(
+            document.getElementById('precios-container'), null, {
             renderer: 'canvas',
             useDirtyRect: false
         }),
     }
 
-    window.addEventListener('resize', graphs['Discounts'].resize);
-    window.addEventListener('resize', graphs['Prices'].resize);
+    window.addEventListener('resize', graphs['Descuentos'].resize);
+    window.addEventListener('resize', graphs['Precios'].resize);
 
-    updateGraph('Discounts');
-    updateGraph('Prices');
+    updateGraph('Descuentos');
+    updateGraph('Precios');
 }
 
 
@@ -94,25 +94,33 @@ function updateGraph(graphName) {
         },
         xAxis: {
             type: 'time',
-            name: 'Date',
+            name: 'Fecha',
             nameLocation: 'middle',
             nameGap: 30,
-            // data: graphData.map(item => [item.date, item[graphName.toLowerCase().slice(0, graphName.length-1)]   ])
         },
         yAxis: {
             type: 'value',
             name: graphName.slice(0, graphName.length - 1),
-            nameGap: 25,
+            nameGap: graphName === 'Descuentos' ? 40 : 60,
             nameLocation: 'middle',
+            axisLabel: {
+                formatter: value => {
+                    if (graphName === 'Descuentos') {
+                        return `${value}%`
+                    }
+                    return `\$${value.toLocaleString('es-CL')}`
+                }
+            }
         },
         series: [
             {
                 data: graphData.map(item => {
+                    const type = graphName == 'Precios' ? 'price' : 'discount'
                     return {
                         name: item.date,
                         value: [
                             item.date,
-                            item[graphName.toLowerCase().slice(0, graphName.length - 1)]
+                            item[type]
                         ]
                     }
                 }),
@@ -121,12 +129,25 @@ function updateGraph(graphName) {
         ],
         tooltip: {
             trigger: 'axis',
+            formatter: params => {
+                const values = params[0].value
+                if (graphName === 'Descuentos') {
+                    return `${(new Date(Date.parse(values[0]))).toLocaleString()} <br />
+                    <span style="float: right; font-weight: bold">${values[1]}% de descuento</span>`;
+                }
+                return `${(new Date(Date.parse(values[0]))).toLocaleString()} <br />
+                <span style="float: right; font-weight: bold">\$${values[1].toLocaleString('es-CL')}</span>`;
+            }
         },
         grid: {
-            left: 15,
+            left: 30,
             right: 5,
             bottom: 80,
-            containLabel: true
+            containLabel: true,
+            tooltip: {
+                show: true,
+                // formater
+            }
         },
         dataZoom: [
             {
@@ -148,8 +169,8 @@ document.querySelector('#glasses-selector').addEventListener("change", function 
     const newGlassesOption = this.value
     if (newGlassesOption !== glassesOption) {
         glassesOption = newGlassesOption;
-        updateGraph('Prices');
-        updateGraph('Discounts');
+        updateGraph('Precios');
+        updateGraph('Descuentos');
     }
 });
 
