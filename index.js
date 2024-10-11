@@ -17,13 +17,46 @@ async function getFileData(fileName) {
     return data;
 }
 
+function removeMiddleOfThreeConsecutive(arr) {
+    if (arr.length < 3) return arr;
+
+    let result = [];
+    let i = 0;
+
+    while (i < arr.length) {
+        let currentPrice = arr[i].discount;
+        let start = i;
+
+        // Find the end of the sequence of identical prices
+        while (i < arr.length && arr[i].discount === currentPrice) {
+            i++;
+        }
+
+        // If there are consecutive elements with the same price
+        console.log(i, arr.length)
+        if (i - start > 2 || i === arr.length) {
+            result.push(arr[start]); // add the first one
+            result.push(arr[i - 1]); // add the last one
+        } else {
+            for (let j = start; j < i; j++) {
+                result.push(arr[j]); // add all elements if there are less than 3
+            }
+        }
+    }
+
+    return result;
+}
+
 async function fetchFileList() {
     const apiUrl = 'https://api.github.com/repos/clementesepulveda/ryk_scraper/contents/data';
 
     const names = await fetch(apiUrl)
         .then(response => response.json())
         .then(files => files.map(file => file.name))
-        .catch(error => console.error('Error fetching file list:', error));
+        .catch(error => {
+            console.error('Error fetching file list:', error)
+            removeLoading();
+        });
 
     for (let i = 0; i < names.length; i++) {
         let timedData = await getFileData(`./data/${names[i]}`)
@@ -40,6 +73,14 @@ async function fetchFileList() {
         v['price'] = parseInt(v['price'].replace('.', ''))
         return v
     })
+
+    // sort by date
+    DATA.sort((a,b) => (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0))
+    // sort by glasses
+    DATA.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
+
+    DATA = removeMiddleOfThreeConsecutive(DATA)
+
 }
 
 // // SELECT GLASSES
@@ -60,25 +101,24 @@ function addOptions() {
 let graphs;
 function createGraphs() {
     graphs = {
-        'Discounts': echarts.init(
-            document.getElementById('discounts-container'), null, {
+        'Descuentos': echarts.init(
+            document.getElementById('descuentos-container'), null, {
             renderer: 'canvas',
             useDirtyRect: false
         }),
-        'Prices': echarts.init(
-            document.getElementById('prices-container'), null, {
+        'Precios': echarts.init(
+            document.getElementById('precios-container'), null, {
             renderer: 'canvas',
             useDirtyRect: false
         }),
     }
 
-    window.addEventListener('resize', graphs['Discounts'].resize);
-    window.addEventListener('resize', graphs['Prices'].resize);
+    window.addEventListener('resize', graphs['Descuentos'].resize);
+    window.addEventListener('resize', graphs['Precios'].resize);
 
-    updateGraph('Discounts');
-    updateGraph('Prices');
+    updateGraph('Descuentos');
+    updateGraph('Precios');
 }
-
 
 function updateGraph(graphName) {
     const graphData = DATA.filter(v => v.name.replaceAll(' ', '') === glassesOption.replaceAll(' ', ''))
@@ -94,39 +134,61 @@ function updateGraph(graphName) {
         },
         xAxis: {
             type: 'time',
-            name: 'Date',
+            name: 'Fecha',
             nameLocation: 'middle',
             nameGap: 30,
-            // data: graphData.map(item => [item.date, item[graphName.toLowerCase().slice(0, graphName.length-1)]   ])
         },
         yAxis: {
             type: 'value',
             name: graphName.slice(0, graphName.length - 1),
-            nameGap: 25,
+            nameGap: graphName === 'Descuentos' ? 40 : 60,
             nameLocation: 'middle',
+            axisLabel: {
+                formatter: value => {
+                    if (graphName === 'Descuentos') {
+                        return `${value}%`
+                    }
+                    return `\$${value.toLocaleString('es-CL')}`
+                }
+            }
         },
         series: [
             {
                 data: graphData.map(item => {
+                    const type = graphName == 'Precios' ? 'price' : 'discount'
                     return {
                         name: item.date,
                         value: [
                             item.date,
-                            item[graphName.toLowerCase().slice(0, graphName.length - 1)]
+                            item[type]
                         ]
                     }
                 }),
                 type: 'line',
+                areaStyle: {}
             }
         ],
         tooltip: {
             trigger: 'axis',
+            formatter: params => {
+                const values = params[0].value
+                if (graphName === 'Descuentos') {
+                    return `${(new Date(Date.parse(values[0]))).toLocaleString()} <br />
+                    <span style="float: right; font-weight: bold">${values[1]}% de descuento</span>`;
+                }
+                return `${(new Date(Date.parse(values[0]))).toLocaleString()} <br />
+                <span style="float: right; font-weight: bold">\$${values[1].toLocaleString('es-CL')}</span>`;
+            }
         },
         grid: {
-            left: 15,
+            left: 30,
             right: 5,
             bottom: 80,
-            containLabel: true
+            containLabel: true,
+            tooltip: {
+                show: true,
+                // formater
+            }
         },
         dataZoom: [
             {
@@ -143,13 +205,12 @@ function updateGraph(graphName) {
     }
 }
 
-
 document.querySelector('#glasses-selector').addEventListener("change", function () {
     const newGlassesOption = this.value
     if (newGlassesOption !== glassesOption) {
         glassesOption = newGlassesOption;
-        updateGraph('Prices');
-        updateGraph('Discounts');
+        updateGraph('Precios');
+        updateGraph('Descuentos');
     }
 });
 
