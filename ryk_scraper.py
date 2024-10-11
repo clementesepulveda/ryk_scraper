@@ -1,15 +1,17 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
+import urllib.request
 import pandas as pd
 import pytz
 from datetime import datetime
 import os
 
 url = "https://www.ryk.cl/anteojos-opticos?prefn1=ryk_gender&prefv1=Hombre&sz=512&start=0"
-page = urlopen(url)
-html = page.read().decode("utf-8")
+url = "https://www.ryk.cl/anteojos-opticos?prefn1=ryk_gender&prefv1=Hombre&sz=512&start=0"
+page = urllib.request.Request(url,headers={'User-Agent': 'Chrome/76.0.3809.132'})
+infile = urllib.request.urlopen(page).read()
+html = infile.decode("utf-8")
 soup = BeautifulSoup(html, "html.parser")
-
 
 data = []
 for product in soup.find_all('div',{'class': 'product'}):
