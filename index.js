@@ -19,28 +19,33 @@ async function getFileData(fileName) {
 
 function removeMiddleOfThreeConsecutive(arr) {
     if (arr.length < 3) return arr;
+    console.log(arr)
+
+    // be careful with different types
+    // be careful with discount and price
 
     let result = [];
     let i = 0;
 
     while (i < arr.length) {
-        let currentPrice = arr[i].discount;
+        let current = arr[i];
         let start = i;
 
-        // Find the end of the sequence of identical prices
-        while (i < arr.length && arr[i].discount === currentPrice) {
+        // Find the end of the sequence of identical prices/glasses/discounts
+        while (
+            i < arr.length &&
+            arr[i].discount === current.discount &&
+            arr[i].price === current.price &&
+            arr[i].name === current.name
+        ) {
             i++;
         }
 
-        // If there are consecutive elements with the same price
-        console.log(i, arr.length)
-        if (i - start > 2 || i === arr.length) {
+        if (i !== start) {
             result.push(arr[start]); // add the first one
-            result.push(arr[i - 1]); // add the last one
+            result.push(arr[i]); // add the last one
         } else {
-            for (let j = start; j < i; j++) {
-                result.push(arr[j]); // add all elements if there are less than 3
-            }
+            result.push(arr[start])
         }
     }
 
@@ -75,9 +80,9 @@ async function fetchFileList() {
     })
 
     // sort by date
-    DATA.sort((a,b) => (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0))
+    DATA.sort((a, b) => (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0))
     // sort by glasses
-    DATA.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
+    DATA.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
 
     DATA = removeMiddleOfThreeConsecutive(DATA)
 
