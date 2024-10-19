@@ -33,7 +33,7 @@ function removeMiddleOfThreeConsecutive(arr) {
 
         // Find the end of the sequence of identical prices/glasses/discounts
         while (
-            i < arr.length &&
+            i < arr.length - 1 &&
             arr[i].discount === current.discount &&
             arr[i].price === current.price &&
             arr[i].name === current.name
