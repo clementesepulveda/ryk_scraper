@@ -19,7 +19,6 @@ async function getFileData(fileName) {
 
 function removeMiddleOfThreeConsecutive(arr) {
     if (arr.length < 3) return arr;
-    console.log(arr)
 
     // be careful with different types
     // be careful with discount and price
@@ -32,13 +31,21 @@ function removeMiddleOfThreeConsecutive(arr) {
         let start = i;
 
         // Find the end of the sequence of identical prices/glasses/discounts
-        while (
-            i < arr.length - 1 &&
-            arr[i].discount === current.discount &&
-            arr[i].price === current.price &&
-            arr[i].name === current.name
-        ) {
-            i++;
+        let keepGoing = true
+        while (keepGoing){
+            if (i + 1 === arr.length) {
+                keepGoing = false;
+            } else if (arr[i+1].name !== current.name) {
+                keepGoing = false;
+            } else if (arr[i+1].price !== current.price) {
+                keepGoing = false;
+            } else if (arr[i+1].discount !== current.discount) {
+                keepGoing = false;
+            }
+
+            if (keepGoing) {
+                i++;
+            }
         }
 
         if (i !== start) {
@@ -73,7 +80,20 @@ async function fetchFileList() {
         }
     }
 
+    const hasValue = (value) => {
+        return !(value === null || value === undefined)
+    }
+
     // Process
+    DATA = DATA.filter(v => {
+        return (
+            hasValue(v['discount']) &&
+            hasValue(v['price']) &&
+            hasValue(v['name']) &&
+            hasValue(v['date'])
+        )
+    })
+
     DATA = DATA.map(v => {
         v['discount'] = v['discount'].includes('%') ? parseInt(v['discount'].split('%')[0]) : 0
         v['price'] = parseInt(v['price'].replace('.', ''))
