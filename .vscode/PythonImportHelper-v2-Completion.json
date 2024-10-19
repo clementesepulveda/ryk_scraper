@@ -1,0 +1,188 @@
+[
+    {
+        "label": "BeautifulSoup",
+        "importPath": "bs4",
+        "description": "bs4",
+        "isExtraImport": true,
+        "detail": "bs4",
+        "documentation": {}
+    },
+    {
+        "label": "urllib.request",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "urllib.request",
+        "description": "urllib.request",
+        "detail": "urllib.request",
+        "documentation": {}
+    },
+    {
+        "label": "urlopen",
+        "importPath": "urllib.request",
+        "description": "urllib.request",
+        "isExtraImport": true,
+        "detail": "urllib.request",
+        "documentation": {}
+    },
+    {
+        "label": "pandas",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pandas",
+        "description": "pandas",
+        "detail": "pandas",
+        "documentation": {}
+    },
+    {
+        "label": "pytz",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pytz",
+        "description": "pytz",
+        "detail": "pytz",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "url",
+        "kind": 5,
+        "importPath": "ryk_scraper",
+        "description": "ryk_scraper",
+        "peekOfCode": "url = \"https://www.ryk.cl/anteojos-opticos?prefn1=ryk_gender&prefv1=Hombre&sz=512&start=0\"\nurl = \"https://www.ryk.cl/anteojos-opticos?prefn1=ryk_gender&prefv1=Hombre&sz=512&start=0\"\npage = urllib.request.Request(url,headers={'User-Agent': 'Chrome/76.0.3809.132'})\ninfile = urllib.request.urlopen(page).read()\nhtml = infile.decode(\"utf-8\")\nsoup = BeautifulSoup(html, \"html.parser\")\ndata = []\nfor product in soup.find_all('div',{'class': 'product'}):\n    if product == None:\n        continue",
+        "detail": "ryk_scraper",
+        "documentation": {}
+    },
+    {
+        "label": "url",
+        "kind": 5,
+        "importPath": "ryk_scraper",
+        "description": "ryk_scraper",
+        "peekOfCode": "url = \"https://www.ryk.cl/anteojos-opticos?prefn1=ryk_gender&prefv1=Hombre&sz=512&start=0\"\npage = urllib.request.Request(url,headers={'User-Agent': 'Chrome/76.0.3809.132'})\ninfile = urllib.request.urlopen(page).read()\nhtml = infile.decode(\"utf-8\")\nsoup = BeautifulSoup(html, \"html.parser\")\ndata = []\nfor product in soup.find_all('div',{'class': 'product'}):\n    if product == None:\n        continue\n    price = product.find('span', {'class': 'value'}).text.replace('\\n', '').strip().replace('  ', '').replace('$', '')",
+        "detail": "ryk_scraper",
+        "documentation": {}
+    },
+    {
+        "label": "page",
+        "kind": 5,
+        "importPath": "ryk_scraper",
+        "description": "ryk_scraper",
+        "peekOfCode": "page = urllib.request.Request(url,headers={'User-Agent': 'Chrome/76.0.3809.132'})\ninfile = urllib.request.urlopen(page).read()\nhtml = infile.decode(\"utf-8\")\nsoup = BeautifulSoup(html, \"html.parser\")\ndata = []\nfor product in soup.find_all('div',{'class': 'product'}):\n    if product == None:\n        continue\n    price = product.find('span', {'class': 'value'}).text.replace('\\n', '').strip().replace('  ', '').replace('$', '')\n    name = product.find('div', {'class': 'tile-body'}).find('a').text",
+        "detail": "ryk_scraper",
+        "documentation": {}
+    },
+    {
+        "label": "infile",
+        "kind": 5,
+        "importPath": "ryk_scraper",
+        "description": "ryk_scraper",
+        "peekOfCode": "infile = urllib.request.urlopen(page).read()\nhtml = infile.decode(\"utf-8\")\nsoup = BeautifulSoup(html, \"html.parser\")\ndata = []\nfor product in soup.find_all('div',{'class': 'product'}):\n    if product == None:\n        continue\n    price = product.find('span', {'class': 'value'}).text.replace('\\n', '').strip().replace('  ', '').replace('$', '')\n    name = product.find('div', {'class': 'tile-body'}).find('a').text\n    discount = product.find('span', {'class': 'promo-value'})",
+        "detail": "ryk_scraper",
+        "documentation": {}
+    },
+    {
+        "label": "html",
+        "kind": 5,
+        "importPath": "ryk_scraper",
+        "description": "ryk_scraper",
+        "peekOfCode": "html = infile.decode(\"utf-8\")\nsoup = BeautifulSoup(html, \"html.parser\")\ndata = []\nfor product in soup.find_all('div',{'class': 'product'}):\n    if product == None:\n        continue\n    price = product.find('span', {'class': 'value'}).text.replace('\\n', '').strip().replace('  ', '').replace('$', '')\n    name = product.find('div', {'class': 'tile-body'}).find('a').text\n    discount = product.find('span', {'class': 'promo-value'})\n    discount = discount.text.strip() if discount else '0'",
+        "detail": "ryk_scraper",
+        "documentation": {}
+    },
+    {
+        "label": "soup",
+        "kind": 5,
+        "importPath": "ryk_scraper",
+        "description": "ryk_scraper",
+        "peekOfCode": "soup = BeautifulSoup(html, \"html.parser\")\ndata = []\nfor product in soup.find_all('div',{'class': 'product'}):\n    if product == None:\n        continue\n    price = product.find('span', {'class': 'value'}).text.replace('\\n', '').strip().replace('  ', '').replace('$', '')\n    name = product.find('div', {'class': 'tile-body'}).find('a').text\n    discount = product.find('span', {'class': 'promo-value'})\n    discount = discount.text.strip() if discount else '0'\n    data.append({",
+        "detail": "ryk_scraper",
+        "documentation": {}
+    },
+    {
+        "label": "data",
+        "kind": 5,
+        "importPath": "ryk_scraper",
+        "description": "ryk_scraper",
+        "peekOfCode": "data = []\nfor product in soup.find_all('div',{'class': 'product'}):\n    if product == None:\n        continue\n    price = product.find('span', {'class': 'value'}).text.replace('\\n', '').strip().replace('  ', '').replace('$', '')\n    name = product.find('div', {'class': 'tile-body'}).find('a').text\n    discount = product.find('span', {'class': 'promo-value'})\n    discount = discount.text.strip() if discount else '0'\n    data.append({\n        'name' : name, ",
+        "detail": "ryk_scraper",
+        "documentation": {}
+    },
+    {
+        "label": "df",
+        "kind": 5,
+        "importPath": "ryk_scraper",
+        "description": "ryk_scraper",
+        "peekOfCode": "df = pd.DataFrame.from_dict(data)\ntimezone = pytz.timezone('Chile/Continental')\nnow = datetime.now(tz = timezone)\ncurrent_time = now.strftime(\"%Y-%m-%d %H:%M:00\")\ndf['date'] = current_time\ndf['price'] = df['price'].apply(lambda x: int(str(x).replace('.', '')))\nfile_name = 'data/' + now.strftime(\"%Y_%m\") + '.csv'\nif not os.path.isfile(file_name):\n    df.to_csv(file_name, index=False)\nelse:  # else it exists so append without writing the header",
+        "detail": "ryk_scraper",
+        "documentation": {}
+    },
+    {
+        "label": "timezone",
+        "kind": 5,
+        "importPath": "ryk_scraper",
+        "description": "ryk_scraper",
+        "peekOfCode": "timezone = pytz.timezone('Chile/Continental')\nnow = datetime.now(tz = timezone)\ncurrent_time = now.strftime(\"%Y-%m-%d %H:%M:00\")\ndf['date'] = current_time\ndf['price'] = df['price'].apply(lambda x: int(str(x).replace('.', '')))\nfile_name = 'data/' + now.strftime(\"%Y_%m\") + '.csv'\nif not os.path.isfile(file_name):\n    df.to_csv(file_name, index=False)\nelse:  # else it exists so append without writing the header\n    df.to_csv(file_name, mode='a', header=False, index=False)",
+        "detail": "ryk_scraper",
+        "documentation": {}
+    },
+    {
+        "label": "now",
+        "kind": 5,
+        "importPath": "ryk_scraper",
+        "description": "ryk_scraper",
+        "peekOfCode": "now = datetime.now(tz = timezone)\ncurrent_time = now.strftime(\"%Y-%m-%d %H:%M:00\")\ndf['date'] = current_time\ndf['price'] = df['price'].apply(lambda x: int(str(x).replace('.', '')))\nfile_name = 'data/' + now.strftime(\"%Y_%m\") + '.csv'\nif not os.path.isfile(file_name):\n    df.to_csv(file_name, index=False)\nelse:  # else it exists so append without writing the header\n    df.to_csv(file_name, mode='a', header=False, index=False)",
+        "detail": "ryk_scraper",
+        "documentation": {}
+    },
+    {
+        "label": "current_time",
+        "kind": 5,
+        "importPath": "ryk_scraper",
+        "description": "ryk_scraper",
+        "peekOfCode": "current_time = now.strftime(\"%Y-%m-%d %H:%M:00\")\ndf['date'] = current_time\ndf['price'] = df['price'].apply(lambda x: int(str(x).replace('.', '')))\nfile_name = 'data/' + now.strftime(\"%Y_%m\") + '.csv'\nif not os.path.isfile(file_name):\n    df.to_csv(file_name, index=False)\nelse:  # else it exists so append without writing the header\n    df.to_csv(file_name, mode='a', header=False, index=False)",
+        "detail": "ryk_scraper",
+        "documentation": {}
+    },
+    {
+        "label": "df['date']",
+        "kind": 5,
+        "importPath": "ryk_scraper",
+        "description": "ryk_scraper",
+        "peekOfCode": "df['date'] = current_time\ndf['price'] = df['price'].apply(lambda x: int(str(x).replace('.', '')))\nfile_name = 'data/' + now.strftime(\"%Y_%m\") + '.csv'\nif not os.path.isfile(file_name):\n    df.to_csv(file_name, index=False)\nelse:  # else it exists so append without writing the header\n    df.to_csv(file_name, mode='a', header=False, index=False)",
+        "detail": "ryk_scraper",
+        "documentation": {}
+    },
+    {
+        "label": "df['price']",
+        "kind": 5,
+        "importPath": "ryk_scraper",
+        "description": "ryk_scraper",
+        "peekOfCode": "df['price'] = df['price'].apply(lambda x: int(str(x).replace('.', '')))\nfile_name = 'data/' + now.strftime(\"%Y_%m\") + '.csv'\nif not os.path.isfile(file_name):\n    df.to_csv(file_name, index=False)\nelse:  # else it exists so append without writing the header\n    df.to_csv(file_name, mode='a', header=False, index=False)",
+        "detail": "ryk_scraper",
+        "documentation": {}
+    },
+    {
+        "label": "file_name",
+        "kind": 5,
+        "importPath": "ryk_scraper",
+        "description": "ryk_scraper",
+        "peekOfCode": "file_name = 'data/' + now.strftime(\"%Y_%m\") + '.csv'\nif not os.path.isfile(file_name):\n    df.to_csv(file_name, index=False)\nelse:  # else it exists so append without writing the header\n    df.to_csv(file_name, mode='a', header=False, index=False)",
+        "detail": "ryk_scraper",
+        "documentation": {}
+    }
+]

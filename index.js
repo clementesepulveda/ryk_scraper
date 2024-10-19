@@ -47,6 +47,7 @@ function removeMiddleOfThreeConsecutive(arr) {
         } else {
             result.push(arr[start])
         }
+        i++;
     }
 
     return result;
