@@ -18,12 +18,16 @@ for product in soup.find_all('div',{'class': 'product'}):
     if product == None:
         continue
 
-    price = product.find('span', {'class': 'value'}).text.replace('\n', '').strip().replace('  ', '').replace('$', '')
     name = product.find('div', {'class': 'tile-body'}).find('a').text
 
     discount = product.find('span', {'class': 'promo-value'})
     discount = discount.text.strip() if discount else '0'
 
+    price = product.find('span', {'class': 'value'}).text.replace('\n', '').strip().replace('  ', '').replace('$', '')
+    if 'Price reduced from' in price:
+        price = product.find('div', {'class': 'price'}).find('span', {'class': 'sales reduced-price'})
+        price = price.find('span', {'class': 'value'}).text.strip().replace('$', '').replace('.', '')
+        
     data.append({
         'name' : name, 
         'price' : price if 'Price' not in price else 0, 
