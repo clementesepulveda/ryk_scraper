@@ -18,6 +18,7 @@ for product in soup.find_all('div',{'class': 'product'}):
     if product == None:
         continue
 
+
     name = product.find('div', {'class': 'tile-body'}).find('a').text
 
     discount = product.find('span', {'class': 'promo-value'})
@@ -41,7 +42,12 @@ now = datetime.now(tz = timezone)
 current_time = now.strftime("%Y-%m-%d %H:%M:00")
 
 df['date'] = current_time
-df['price'] = df['price'].apply(lambda x: int(str(x).replace('.', '')))
+
+def applyPrice(x):
+    if x == 'null':
+        return None
+    return int(str(x).replace('.', ''))
+df['price'] = df['price'].apply(applyPrice)
 
 file_name = 'data/' + now.strftime("%Y_%m") + '.csv'
 if not os.path.isfile(file_name):
